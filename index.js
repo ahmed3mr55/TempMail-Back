@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// CORS configuration
 app.use(
   cors({
     origin: "https://www.misho.cfd",
@@ -15,7 +15,8 @@ app.use(
     credentials: true,
     allowedHeaders: ["Content-Type"],
   })
-)
+);
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,7 +26,6 @@ connectDB();
 // Routes
 app.use("/api/tempMail", require("./routes/tempMail"));
 app.use("/api/message", require("./routes/message"));
-// Webhook route
 app.use("/api", require("./routes/webhook"));
 
 app.listen(PORT, () => {
