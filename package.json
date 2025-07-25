@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "googleapis": "^153.0.0",
+    "imap": "^0.8.19",
+    "init": "^0.1.2",
+    "joi": "^17.13.3",
+    "mailparser": "^3.7.4",
+    "mongoose": "^8.16.4",
+    "multer": "^2.0.2",
+    "node-imap": "^0.9.6",
+    "nodemon": "^3.1.10",
+    "smtp-server": "^3.14.0"
+  },
+  "name": "back",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
