@@ -8,11 +8,14 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
-  origin: ["https://www.misho.cfd", "https://misho.cfd", "http://localhost:3000"],
+  origin: function (origin, callback) {
+    callback(null, true); // يسمح لأي origin
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
+
 
 
 app.use(cookieParser());
