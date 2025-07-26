@@ -5,7 +5,6 @@ const { Message } = require("../models/Message");
 const router = express.Router();
 const Joi = require("joi");
 
-
 function generateRandomString(length = 8) {
   return crypto
     .randomBytes(Math.ceil(length / 2))
@@ -63,8 +62,9 @@ router.post("/generate", async (req, res) => {
       .cookie("Email", email, {
         maxAge: ms,
         httpOnly: false,
-        sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: "none",
+        secure: true,
+        path: "/",
       })
       .json({
         email,
@@ -109,8 +109,9 @@ router.post("/generate/:subdomain", async (req, res) => {
       .cookie("Email", email, {
         maxAge: ms,
         httpOnly: false,
-        sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: "none",
+        secure: true,
+        path: "/",
       })
       .json({
         email,
