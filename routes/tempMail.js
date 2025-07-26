@@ -63,7 +63,7 @@ router.post("/generate", async (req, res) => {
       .cookie("Email", email, {
         maxAge: ms,
         httpOnly: false,
-        sameSite: "lax",
+        sameSite: "none",
         secure: process.env.NODE_ENV === "production",
       })
       .json({
@@ -109,7 +109,7 @@ router.post("/generate/:subdomain", async (req, res) => {
       .cookie("Email", email, {
         maxAge: ms,
         httpOnly: false,
-        sameSite: "lax",
+        sameSite: "none",
         secure: process.env.NODE_ENV === "production",
       })
       .json({
