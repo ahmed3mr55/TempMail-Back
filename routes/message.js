@@ -4,13 +4,17 @@ const { Message } = require("../models/Message");
 const router = express.Router();
 
 
-router.get("/inbox/email", async (req, res) => {
+router.get("/inbox/messages/email", async (req, res) => {
   try {
-    const { email } = req.cookies.Email;
-    const temp = await TempMail.findOne({ email });
-    if (!temp)
+    const { Email } = req.cookies;
+    if (!Email) {
+      return res.status(400).json({ error: "Email cookie not found" });
+    }
+    const temp = await TempMail.findOne({ email: Email });
+    if (!temp) {
       return res.status(404).json({ error: "Temporary email not found" });
-    const messages = await Message.find({ mail: temp._id }).select("from subject").sort("-createdAt");
+    }
+    const messages = await Message.find({ mail: temp._id }).sort("-createdAt");
     res.status(200).json(messages);
   } catch (error) {
     console.error("Error fetching inbox messages:", error);
