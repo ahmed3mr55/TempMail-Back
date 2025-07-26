@@ -4,9 +4,9 @@ const { Message } = require("../models/Message");
 const router = express.Router();
 
 
-router.get("/inbox/:email", async (req, res) => {
+router.get("/inbox/email", async (req, res) => {
   try {
-    const { email } = req.params;
+    const { email } = req.cookies.Email;
     const temp = await TempMail.findOne({ email });
     if (!temp)
       return res.status(404).json({ error: "Temporary email not found" });

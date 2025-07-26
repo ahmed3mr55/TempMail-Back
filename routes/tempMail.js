@@ -125,7 +125,6 @@ router.post("/generate/:subdomain", async (req, res) => {
 router.get("/check-email", async (req, res) => {
   try {
     const email = req.cookies.Email;
-    console.log("Checking temporary email:");
     const temp = await TempMail.findOne({ email });
     if (!temp) {
       return res
