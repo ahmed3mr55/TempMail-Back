@@ -3,7 +3,11 @@ const crypto = require("crypto");
 const { TempMail } = require("../models/TempMail");
 const { Message } = require("../models/Message");
 const router = express.Router();
+const customCors = require("../middleware/customCors");
 const Joi = require("joi");
+
+// Middleware to handle CORS
+router.use(customCors);
 
 function generateRandomString(length = 8) {
   return crypto

@@ -8,9 +8,6 @@ const router = express.Router();
 const upload = multer();
 
 router.post("/incoming", upload.none(), async (req, res) => {
-  console.log("Content‑Type:", req.headers["content-type"]);
-  console.log("Body keys:", Object.keys(req.body));
-
   try {
     // 1) استخرج العنوان الفعلي
     let actualTo;
