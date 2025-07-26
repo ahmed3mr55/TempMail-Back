@@ -2,10 +2,12 @@ const express = require("express");
 const connectDB = require("./config/db");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
+const customCors = require("./middleware/customCors");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(customCors); // هنا الميدل وير للـ CORS
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
