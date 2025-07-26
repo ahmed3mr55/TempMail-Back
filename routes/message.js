@@ -1,11 +1,8 @@
 const express = require("express");
 const { TempMail } = require("../models/TempMail");
 const { Message } = require("../models/Message");
-const customCors = require("../middleware/customCors");
 const router = express.Router();
 
-// Middleware to handle CORS
-router.use(customCors);
 
 router.get("/inbox/:email", async (req, res) => {
   try {
