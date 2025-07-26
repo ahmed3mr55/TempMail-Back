@@ -4,7 +4,6 @@ require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const customCors = require("./middleware/customCors");
 const cors = require("cors");
-const { allow } = require("joi");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -12,9 +11,10 @@ const PORT = process.env.PORT || 5000;
 
 
 const corsOptions = {
-  origin: "https://www.misho.cfd",
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: ["https://misho.cfd", "https://www.misho.cfd", "http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
   maxAge: 3600, // 1 hour
 }
 
@@ -26,8 +26,8 @@ app.use(express.urlencoded({ extended: true }));
 connectDB();
 
 // Routes
-app.use("/api/tempMail", require("./routes/tempMail"));
-app.use("/api/message", require("./routes/message"));
+app.use("/api/tempMail", cors(corsOptions), require("./routes/tempMail"));
+app.use("/api/message", cors(corsOptions), require("./routes/message"));
 app.use("/api", require("./routes/webhook"));
 
 app.listen(PORT, () => {
