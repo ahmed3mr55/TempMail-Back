@@ -144,6 +144,7 @@ router.get("/check-email", async (req, res) => {
     }
     return res.status(200).json({
       email,
+      password: temp.password,
       expiresAt: temp.expiresAt,
       createdAt: temp.createdAt,
     });
