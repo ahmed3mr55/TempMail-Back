@@ -12,6 +12,13 @@ function generateRandomString(length = 8) {
     .slice(0, length);
 }
 
+function generatePassword(length = 8) {
+  return crypto
+    .randomBytes(Math.ceil(length / 2))
+    .toString("hex")
+    .slice(0, length);
+}
+
 function parseTTL(ttl) {
   if (typeof ttl !== "string") return null;
   const m = ttl.match(/^(\d+)([hd])$/i);
@@ -25,7 +32,7 @@ function parseTTL(ttl) {
     ms = num * 24 * 60 * 60 * 1000;
   }
   // Limit to 24 hours max
-  return Math.min(ms, 24 * 60 * 60 * 1000);
+  return Math.min(ms, 24 * 60 * 60 * 1000 * 30); // 30 days
 }
 
 router.post("/generate", async (req, res) => {
@@ -54,6 +61,7 @@ router.post("/generate", async (req, res) => {
 
     const temp = new TempMail({
       email,
+      password: generatePassword(),
       expiresAt: new Date(Date.now() + ms),
     });
     await temp.save();
@@ -101,6 +109,7 @@ router.post("/generate/:subdomain", async (req, res) => {
     }
     const temp = new TempMail({
       email,
+      password: generatePassword(),
       expiresAt: new Date(Date.now() + ms),
     });
     await temp.save();

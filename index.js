@@ -27,6 +27,7 @@ connectDB();
 
 // Routes
 app.use("/api/tempMail", cors(corsOptions), require("./routes/tempMail"));
+app.use("/api/login", cors(corsOptions), require("./routes/login"));
 app.use("/api/message", cors(corsOptions), require("./routes/message"));
 app.use("/api", require("./routes/webhook"));
 
