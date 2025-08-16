@@ -4,11 +4,23 @@ require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const customCors = require("./middleware/customCors");
 const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 
+// Rate limiting middleware
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minute
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  max: 1500,
+  message: {
+    success: false,
+    error: "Too many requests from your IP, please try again later.",
+  },
+});
 
 const corsOptions = {
   origin: ["https://misho.cfd", "https://www.misho.cfd", "http://localhost:3000"],
@@ -22,6 +34,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(limiter);
 
 connectDB();
 

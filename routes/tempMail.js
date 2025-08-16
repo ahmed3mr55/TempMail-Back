@@ -4,6 +4,19 @@ const { TempMail } = require("../models/TempMail");
 const { Message } = require("../models/Message");
 const router = express.Router();
 const Joi = require("joi");
+const rateLimit = require("express-rate-limit");
+
+// Rate limiting middleware
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minute
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  max: 10,
+  message: {
+    success: false,
+    error: "Too many requests from your IP, please try again later.",
+  },
+});
 
 function generateRandomString(length = 8) {
   return crypto
@@ -35,12 +48,25 @@ function parseTTL(ttl) {
   return Math.min(ms, 24 * 60 * 60 * 1000 * 30); // 30 days
 }
 
-router.post("/generate", async (req, res) => {
+router.post("/generate", limiter, async (req, res) => {
   try {
     // Generate a random email address
     const localPart = generateRandomString(10);
     const domainPart = "@in.misho.cfd";
-    let email = `${localPart}${domainPart}`;
+    const domainPart2 = "@ah.misho.cfd";
+    const domainPart3 = "@me.misho.cfd";
+    const domainPart4 = "@us.misho.cfd";
+    const domainPart5 = "@you.misho.cfd";
+    const randomDomain = [
+      domainPart,
+      domainPart2,
+      domainPart3,
+      domainPart4,
+      domainPart5,
+    ];
+    const randomIndex = Math.floor(Math.random() * randomDomain.length);
+    const domain = randomDomain[randomIndex];
+    let email = `${localPart}${domain}`;
     const { ttl } = req.body;
     const ms = parseTTL(ttl) ?? 30 * 60 * 1000;
     if (ms <= 0) {
@@ -85,15 +111,28 @@ router.post("/generate", async (req, res) => {
 });
 
 // Generate temporary email with subdomain
-router.post("/generate/:subdomain", async (req, res) => {
+router.post("/generate/:subdomain/:domain", limiter, async (req, res) => {
   try {
-    const { subdomain } = req.params;
+    const { subdomain, domain } = req.params;
+    const emails = [
+      "@in.misho.cfd",
+      "@ah.misho.cfd",
+      "@me.misho.cfd",
+      "@us.misho.cfd",
+      "@you.misho.cfd",
+    ];
+    if (!emails.includes(domain)) {
+      return res.status(400).json({ error: "Invalid domain" });
+    }
     const schema = Joi.object({
       subdomain: Joi.string().alphanum().min(4).max(20).required(),
+      domain: Joi.string()
+        .valid(...emails)
+        .required(),
     });
-    const { error } = schema.validate({ subdomain });
+    const { error } = schema.validate({ subdomain, domain });
     if (error) return res.status(400).json({ error: error.details[0].message });
-    const email = `${subdomain}@in.misho.cfd`;
+    const email = `${subdomain}${domain}`;
     const { ttl } = req.body;
     const ms = parseTTL(ttl) ?? 30 * 60 * 1000;
     if (ms <= 0) {

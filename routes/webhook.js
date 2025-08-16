@@ -3,11 +3,25 @@ const multer = require("multer");
 const { simpleParser } = require("mailparser");
 const { TempMail } = require("../models/TempMail");
 const { Message } = require("../models/Message");
+const rateLimit = require("express-rate-limit");
 
 const router = express.Router();
 const upload = multer();
 
-router.post("/incoming", upload.none(), async (req, res) => {
+
+// Rate limiting middleware
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minute
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  max: 100,
+  message: {
+    success: false,
+    error: "Too many requests from your IP, please try again later.",
+  },
+});
+
+router.post("/incoming", limiter, upload.none(), async (req, res) => {
   try {
     // 1) استخرج العنوان الفعلي
     let actualTo;

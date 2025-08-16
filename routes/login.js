@@ -1,10 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const { TempMail } = require("../models/TempMail");
+const Joi = require("joi");
 
 router.post("/", async (req, res) => {
   const { email } = req.body;
   const { password } = req.body;
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+  });
+  const { error } = schema.validate({ email, password });
+  if (error) return res.status(400).json({ error: error.details[0].message });
   try {
     const temp = await TempMail.findOne({ email });
     if (!temp || temp.password !== password)
